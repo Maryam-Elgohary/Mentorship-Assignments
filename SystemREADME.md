@@ -36,12 +36,10 @@ It allows the owner to add new orders with customer names, drink types, and spec
 ```bash
 git clone https://github.com/your-username/smart-ahwa-manager.git
 cd smart-ahwa-manager
-
-### 2. Install Dependencies
 ```bash
+### 2. Install Dependencies
 flutter pub get
 
 ### 3. Run the app
-```bash
 flutter run
 
