@@ -61,7 +61,6 @@ class OrderManager {
   List<Order> get allOrders => _orders;
 }
 
-
 void main() {
   runApp(SmartAhwaApp());
 }
@@ -74,6 +73,7 @@ class SmartAhwaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Smart Ahwa Manager',
       theme: ThemeData(primarySwatch: Colors.green),
       home: OrderScreen(manager: manager),
@@ -97,73 +97,121 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Smart Ahwa Manager")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("Smart Ahwa Manager",
+            style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.brown[50],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          spacing: 20,
           children: [
             // Customer input
             TextField(
               controller: _customerController,
-              decoration: const InputDecoration(labelText: "Customer Name"),
+              cursorColor: Colors.brown,
+              decoration: const InputDecoration(
+                  labelStyle: TextStyle(color: Colors.brown),
+                  labelText: "Customer Name",
+                  border: OutlineInputBorder(),
+                  hoverColor: Colors.brown,
+                  focusColor: Colors.brown),
             ),
             // Drink dropdown
-            DropdownButton<String>(
-              hint: const Text("Select Drink"),
-              value: _selectedDrink,
-              items: ["Shai", "Turkish Coffee", "Hibiscus Tea"]
-                  .map((drink) => DropdownMenuItem(
-                        value: drink,
-                        child: Text(drink),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedDrink = value;
-                });
-              },
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(5)),
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  dropdownColor: Colors.brown[50],
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.brown),
+                  underline: Container(),
+                  menuWidth: MediaQuery.of(context).size.width,
+                  hint: const Text("Select Drink",
+                      style: TextStyle(color: Colors.brown)),
+                  value: _selectedDrink,
+                  items: ["Shai", "Turkish Coffee", "Hibiscus Tea"]
+                      .map((drink) => DropdownMenuItem(
+                            value: drink,
+                            child: Text(drink,
+                                style: TextStyle(color: Colors.brown)),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDrink = value;
+                    });
+                  },
+                ),
+              ),
             ),
             // Special request
             TextField(
               controller: _specialController,
-              decoration: const InputDecoration(labelText: "Special Request"),
+              cursorColor: Colors.brown,
+              decoration: const InputDecoration(
+                  labelText: "Special Request",
+                  labelStyle: TextStyle(color: Colors.brown),
+                  border: OutlineInputBorder(),
+                  hoverColor: Colors.brown,
+                  focusColor: Colors.brown),
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                if (_customerController.text.isNotEmpty &&
-                    _selectedDrink != null) {
-                  Drink drink;
-                  switch (_selectedDrink) {
-                    case "Shai":
-                      drink = Shai();
-                      break;
-                    case "Turkish Coffee":
-                      drink = TurkishCoffee();
-                      break;
-                    case "Hibiscus Tea":
-                      drink = Hibiscus();
-                      break;
-                    default:
-                      drink = Shai();
+            //  const SizedBox(height: 10),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown[50], elevation: 5),
+                onPressed: () {
+                  if (_customerController.text.isNotEmpty &&
+                      _selectedDrink != null) {
+                    Drink drink;
+                    switch (_selectedDrink) {
+                      case "Shai":
+                        drink = Shai();
+                        break;
+                      case "Turkish Coffee":
+                        drink = TurkishCoffee();
+                        break;
+                      case "Hibiscus Tea":
+                        drink = Hibiscus();
+                        break;
+                      default:
+                        drink = Shai();
+                    }
+                    widget.manager.addOrder(Order(
+                      _customerController.text,
+                      drink,
+                      specialRequest: _specialController.text,
+                    ));
+                    _customerController.clear();
+                    _specialController.clear();
+                    setState(() {
+                      _selectedDrink = null;
+                    });
                   }
-                  widget.manager.addOrder(Order(
-                    _customerController.text,
-                    drink,
-                    specialRequest: _specialController.text,
-                  ));
-                  _customerController.clear();
-                  _specialController.clear();
-                  setState(() {
-                    _selectedDrink = null;
-                  });
-                }
-              },
-              child: const Text("Add Order"),
+                },
+                child: const Text("Add Order",
+                    style: TextStyle(
+                        color: Colors.brown,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22)),
+              ),
             ),
-            const SizedBox(height: 20),
+            //  const SizedBox(height: 20),
             const Text("Pending Orders:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown)),
             Expanded(
               child: ListView.builder(
                 itemCount: widget.manager.getPendingOrders().length,
@@ -188,17 +236,25 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.analytics),
+        backgroundColor: Colors.brown[50],
+        child: const Icon(Icons.analytics, color: Colors.brown),
         onPressed: () {
           final report = widget.manager.generateReport();
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
-              title: const Text("Sales Report"),
+              backgroundColor: Colors.brown[50],
+              title: const Text("Sales Report",
+                  style: TextStyle(
+                      color: Colors.brown, fontWeight: FontWeight.bold)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
+                //  mainAxisAlignment: MainAxisAlignment.start,
                 children: report.entries
-                    .map((e) => Text("${e.key}: ${e.value} orders"))
+                    .map((e) => Text(
+                          "${e.key}:  ${e.value} orders",
+                          style: TextStyle(color: Colors.brown, fontSize: 18),
+                        ))
                     .toList(),
               ),
             ),
