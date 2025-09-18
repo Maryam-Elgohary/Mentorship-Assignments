@@ -27,7 +27,7 @@ It allows the owner to add new orders with customer names, drink types, and spec
 - **Abstraction**: `Drink` is used as a base class to ensure flexibility and modularity.  
 - **SRP (Single Responsibility Principle)**: `OrderManager` is only responsible for handling orders.  
 - **OCP (Open/Closed Principle)**: You can add new drink types without changing existing code.  
-
+- **LSP**: all drinks (Shai, TurkishCoffee, Hibiscus) can replace each other as Drink objects without breaking the app.
 ---
 
 ## Getting Started
